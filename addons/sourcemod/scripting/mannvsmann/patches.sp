@@ -16,6 +16,8 @@
  */
 
 static MemoryPatch g_MemoryPatchRadiusCurrencyCollectionCheck;
+static MemoryPatch g_MemoryPatchUpdateMissionDestroySentries;
+static MemoryPatch g_MemoryPatchUpdateMissionDestroySentries2;
 
 void Patches_Initialize(GameData gamedata)
 {
@@ -24,12 +26,20 @@ void Patches_Initialize(GameData gamedata)
 	//Allows players not on RED to collect credits in a radius
 	//Not done using a DHook because of nested function calls that depend on the proper team
 	CreateMemoryPatch(g_MemoryPatchRadiusCurrencyCollectionCheck, "MemoryPatch_RadiusCurrencyCollectionCheck");
+	CreateMemoryPatch(g_MemoryPatchUpdateMissionDestroySentries, "MemoryPatch_UpdateMissionDestroySentries");
+	CreateMemoryPatch(g_MemoryPatchUpdateMissionDestroySentries2, "MemoryPatch_UpdateMissionDestroySentries1");
 }
 
 void Patches_Destroy()
 {
 	if (g_MemoryPatchRadiusCurrencyCollectionCheck)
 		g_MemoryPatchRadiusCurrencyCollectionCheck.Disable();
+	
+	if (g_MemoryPatchUpdateMissionDestroySentries)
+		g_MemoryPatchUpdateMissionDestroySentries.Disable();
+	
+	if (g_MemoryPatchUpdateMissionDestroySentries2)
+		g_MemoryPatchUpdateMissionDestroySentries2.Disable();
 }
 
 static void CreateMemoryPatch(MemoryPatch &patch, const char[] name)

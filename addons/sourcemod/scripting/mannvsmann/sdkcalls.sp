@@ -15,6 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+static Handle g_SDKCallParse;
 static Handle g_SDKCallResetMap;
 static Handle g_SDKCallGetPlayerCurrencySpent;
 static Handle g_SDKCallAddPlayerCurrencySpent;
@@ -31,6 +32,7 @@ static Handle g_SDKCallGetNextRespawnWave;
 
 void SDKCalls_Initialize(GameData gamedata)
 {
+	g_SDKCallParse = PrepSDKCall_Parse(gamedata);
 	g_SDKCallResetMap = PrepSDKCall_ResetMap(gamedata);
 	g_SDKCallGetPlayerCurrencySpent = PrepSDKCall_GetPlayerCurrencySpent(gamedata);
 	g_SDKCallAddPlayerCurrencySpent = PrepSDKCall_AddPlayerCurrencySpent(gamedata);
@@ -44,6 +46,19 @@ void SDKCalls_Initialize(GameData gamedata)
 	g_SDKCallShouldSwitchTeams = PrepSDKCall_ShouldSwitchTeams(gamedata);
 	g_SDKCallShouldScrambleTeams = PrepSDKCall_ShouldScrambleTeams(gamedata);
 	g_SDKCallGetNextRespawnWave = PrepSDKCall_GetNextRespawnWave(gamedata);
+}
+
+Handle PrepSDKCall_Parse(GameData gamedata)
+{
+	StartPrepSDKCall(SDKCall_Entity);
+	PrepSDKCall_SetFromConf(gamedata, SDKConf_Signature, "CPopulationManager::Parse");
+	PrepSDKCall_SetReturnInfo(SDKType_Bool, SDKPass_ByValue);
+	
+	Handle call = EndPrepSDKCall();
+	if (!call)
+		LogMessage("Failed to create SDK call: CPopulationManager::Parse");
+	
+	return call;
 }
 
 Handle PrepSDKCall_ResetMap(GameData gamedata)
@@ -227,6 +242,14 @@ Handle PrepSDKCall_GetNextRespawnWave(GameData gamedata)
 		LogMessage("Failed to create SDK call: CTFGameRules::GetNextRespawnWave");
 	
 	return call;
+}
+
+bool SDKCall_Parse(int populator)
+{
+	if (g_SDKCallParse)
+		return SDKCall(g_SDKCallParse, populator);
+	else
+		return false;
 }
 
 void SDKCall_ResetMap(int populator)

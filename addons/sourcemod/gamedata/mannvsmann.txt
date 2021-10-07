@@ -9,6 +9,11 @@
 				"linux"		"@_ZN9CUpgrades18ApplyUpgradeToItemEP9CTFPlayerP13CEconItemViewiibb"
 				"windows"	"\x55\x8B\xEC\x83\xEC\x0C\x57\x8B\x7D\x08\x89\x4D\xF8"
 			}
+			"CPopulationManager::Parse"
+			{
+				"linux"		"@_ZN18CPopulationManager5ParseEv"
+				"windows"	"\x55\x8B\xEC\x83\xEC\x18\x56\x57\x8B\xF9\x80\xBF\x74\x03\x00\x00\x00"
+			}
 			"CPopulationManager::Update"
 			{
 				"linux"		"@_ZN18CPopulationManager6UpdateEv"
@@ -33,6 +38,11 @@
 			{
 				"linux"		"@_ZN18CPopulationManager38RemovePlayerAndItemUpgradesFromHistoryEP9CTFPlayer"
 				"windows"	"\x55\x8B\xEC\x83\xEC\x14\x81\x65\xF0\xFF\xFF\x0F\xFF"
+			}
+			"CMissionPopulator::UpdateMissionDestroySentries"
+			{
+				"linux"		"@_ZN17CMissionPopulator28UpdateMissionDestroySentriesEv"
+				"windows"	"\x55\x8B\xEC\x81\xEC\x88\x00\x00\x00\x8B\x15\x2A\x2A\x2A\x2A"
 			}
 			"CTFGameRules::IsQuickBuildTime"
 			{
@@ -124,6 +134,16 @@
 				"linux"		"@_ZN13CObjectSapper22ApplyRoboSapperEffectsEP9CTFPlayerf"
 				"windows"	"\x55\x8B\xEC\x53\x57\x8B\x7D\x08\x8B\xD9\x85\xFF\x75\x2A\x5F\x32\xC0\x5B\x5D\xC2\x08\x00"
 			}
+			"CSpawnLocation::FindSpawnLocation"
+			{
+				"linux"		"@_ZN14CSpawnLocation17FindSpawnLocationER6Vector"
+				"windows"	"\x55\x8B\xEC\x81\xEC\xB4\x00\x00\x00\x53\x8B\xC1"
+			}
+			"CSpawnLocation::DoTeleporterOverride"
+			{
+				"linux"		"@_Z20DoTeleporterOverrideP11CBaseEntityR6Vectorb"
+				"windows"	"\x55\x8B\xEC\x83\xEC\x1C\x53\x56\x33\xC9"
+			}
 			"UTIL_RemoveImmediate"
 			{
 				"linux"		"@_Z20UTIL_RemoveImmediateP11CBaseEntity"
@@ -191,6 +211,11 @@
 			{
 				"linux"		"1276"
 				"windows"	"1256"
+			}
+			"CPopulationManager::m_popfileFull"
+			{
+				"linux"		"904"
+				"windows"	"884"
 			}
 			"CPopulationManager::m_isRestoringCheckpoint"
 			{
@@ -261,6 +286,13 @@
 						"type"	"cbaseentity"
 					}
 				}
+			}
+			"CMissionPopulator::UpdateMissionDestroySentries"
+			{
+				"signature"	"CMissionPopulator::UpdateMissionDestroySentries"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"ignore"
 			}
 			"CTFGameRules::IsQuickBuildTime"
 			{
@@ -440,6 +472,44 @@
 					}
 				}
 			}
+			"CSpawnLocation::FindSpawnLocation"
+			{
+				"signature"	"CSpawnLocation::FindSpawnLocation"
+				"callconv"	"thiscall"
+				"return"	"int"
+				"this"		"ignore"
+				"arguments"
+				{
+					"vSpawnPosition"
+					{
+						"type"	"vectorptr"
+						"flags"	"byref"
+					}
+				}
+			}
+			"CSpawnLocation::DoTeleporterOverride"
+			{
+				"signature"	"CSpawnLocation::DoTeleporterOverride"
+				"callconv"	"thiscall"
+				"return"	"int"
+				"this"		"ignore"
+				"arguments"
+				{
+					"spawnEnt"
+					{
+						"type"	"cbaseentity"
+					}
+					"vSpawnPosition"
+					{
+						"type"	"vectorptr"
+						"flags"	"byref"
+					}
+					"bClosestPointOnNav"
+					{
+						"type"	"bool"
+					}
+				}
+			}
 			"CCurrencyPack::MyTouch"
 			{
 				"offset"	"CCurrencyPack::MyTouch"
@@ -512,6 +582,22 @@
 					"offset"	"26"	//CTFPlayerShared::RadiusCurrencyCollectionCheck+1A
 				}
 			}
+			"MemoryPatch_UpdateMissionDestroySentries1"
+			{
+				"windows"
+				{
+					"signature"	"CMissionPopulator::UpdateMissionDestroySentries"
+					"offset"	"487"	//CMissionPopulator::UpdateMissionDestroySentries+1E7
+				}
+			}
+			"MemoryPatch_UpdateMissionDestroySentries"	// if ( pObj->GetTeamNumber() == TF_TEAM_PVE_DEFENDERS )
+			{
+				"windows"
+				{
+					"signature"	"CMissionPopulator::UpdateMissionDestroySentries"
+					"offset"	"400"	//CMissionPopulator::UpdateMissionDestroySentries+190
+				}
+			}
 		}
 		"Keys"
 		{
@@ -519,6 +605,14 @@
 			{
 				"linux"		"\xEB"	//jz short -> jmp short
 				"windows"	"\xEB"	//jz short -> jmp short
+			}
+			"MemoryPatch_UpdateMissionDestroySentries1"
+			{
+				"windows"	"\x6A\x03"
+			}
+			"MemoryPatch_UpdateMissionDestroySentries"
+			{
+				"windows"	"\x83\xF8\x00\x74\x35"
 			}
 		}
 	}

@@ -24,6 +24,7 @@ void Events_Initialize()
 	HookEvent("teamplay_restart_round", Event_TeamplayRestartRound);
 	HookEvent("arena_round_start", Event_ArenaRoundStart);
 	HookEvent("post_inventory_application", Event_PostInventoryApplication);
+	HookEvent("player_builtobject", Event_PlayerBuiltObject);
 	HookEvent("player_death", Event_PlayerDeath);
 	HookEvent("player_spawn", Event_PlayerSpawn);
 	HookEvent("player_changeclass", Event_PlayerChangeClass);
@@ -100,6 +101,8 @@ public void Event_TeamplayRoundStart(Event event, const char[] name, bool dontBr
 			SetEntProp(resource, Prop_Send, "m_bMannVsMachineBetweenWaves", false);
 		}
 	}
+	
+	ReloadBusterSpawns();
 }
 
 public void Event_TeamplayRestartRound(Event event, const char[] name, bool dontBroadcast)
@@ -225,6 +228,17 @@ public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast
 			}
 		}
 	}
+}
+
+public void Event_PlayerBuiltObject(Event event, const char[] name, bool dontBroadcast)
+{
+	int client = GetClientOfUserId(event.GetInt("userid"));
+	TFObjectType type = view_as<TFObjectType>(event.GetInt("type"));
+	int index = event.GetInt("index");
+	
+	TFObjectMode mode = TF2_GetObjectMode(index);
+	
+	//TODO: Add spawn point for object and reload buster spawns
 }
 
 public void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast)

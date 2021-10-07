@@ -211,3 +211,26 @@ int CalculateCurrencyAmount(int attacker)
 	
 	return RoundToCeil(amount);
 }
+
+void ReloadBusterSpawns()
+{
+	int populator = FindEntityByClassname(MaxClients + 1, "info_populator");
+	if (populator != -1)
+	{
+		//Create a spawn point for sentry busters
+		//TODO: Only do this for teleporters, then rename the teleporter to this spawn point
+		//The population manager will try to spawn bots on it, but prioritize teleporters with the same name
+		int teamspawn = CreateEntityByName("info_player_teamspawn");
+		DispatchKeyValue(teamspawn, "targetname", "spawnbot");
+		DispatchSpawn(teamspawn);
+		
+		//This must be AFTER the spawns are created or else FindSpawnLocation will run into an NPE
+		char popFile[] = "scripts/population/mvm_mannworks.pop";
+		SetEntDataString(populator, g_OffsetPopFileFull, popFile, sizeof(popFile));
+		
+		if (!SDKCall_Parse(populator))
+		{
+			LogError("Failed to parse population file %s", popFile);
+		}
+	}
+}

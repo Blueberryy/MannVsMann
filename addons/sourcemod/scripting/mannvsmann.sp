@@ -44,6 +44,13 @@ enum CurrencyRewards
 	TF_CURRENCY_PACK_CUSTOM
 }
 
+enum SpawnLocationResult
+{
+	SPAWN_LOCATION_NOT_FOUND = 0,
+	SPAWN_LOCATION_NAV,
+	SPAWN_LOCATION_TELEPORTER
+}
+
 //ConVars
 ConVar mvm_currency_starting;
 ConVar mvm_currency_rewards_player_killed;
@@ -64,6 +71,7 @@ TFTeam g_CurrencyPackTeam;
 int g_OffsetPlayerSharedOuter;
 int g_OffsetPlayerReviveMarker;
 int g_OffsetCurrencyPackAmount;
+int g_OffsetPopFileFull;
 int g_OffsetRestoringCheckpoint;
 
 //Other globals
@@ -134,6 +142,7 @@ public void OnPluginStart()
 		g_OffsetPlayerSharedOuter = gamedata.GetOffset("CTFPlayerShared::m_pOuter");
 		g_OffsetPlayerReviveMarker = gamedata.GetOffset("CTFPlayer::m_hReviveMarker");
 		g_OffsetCurrencyPackAmount = gamedata.GetOffset("CCurrencyPack::m_nAmount");
+		g_OffsetPopFileFull = gamedata.GetOffset("CPopulationManager::m_popfileFull");
 		g_OffsetRestoringCheckpoint = gamedata.GetOffset("CPopulationManager::m_isRestoringCheckpoint");
 		
 		delete gamedata;
@@ -150,6 +159,12 @@ public void OnPluginStart()
 			OnClientPutInServer(client);
 		}
 	}
+	
+	//Testing
+	FindConVar("tf_mvm_default_sentry_buster_damage_dealt_threshold").IntValue = 1;
+	FindConVar("tf_mvm_default_sentry_buster_kill_threshold").IntValue = 1;
+	FindConVar("tf_populator_debug").BoolValue = true;
+	FindConVar("developer").IntValue = 2;
 }
 
 public void OnPluginEnd()

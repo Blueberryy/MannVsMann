@@ -32,6 +32,7 @@ void DHooks_Initialize(GameData gamedata)
 	CreateDynamicDetour(gamedata, "CPopulationManager::Update", DHookCallback_PopulationManagerUpdate_Pre, _);
 	CreateDynamicDetour(gamedata, "CPopulationManager::ResetMap", DHookCallback_PopulationManagerResetMap_Pre, DHookCallback_PopulationManagerResetMap_Post);
 	CreateDynamicDetour(gamedata, "CPopulationManager::RemovePlayerAndItemUpgradesFromHistory", DHookCallback_RemovePlayerAndItemUpgradesFromHistory_Pre, DHookCallback_RemovePlayerAndItemUpgradesFromHistory_Post);
+	CreateDynamicDetour(gamedata, "CMissionPopulator::UpdateMissionDestroySentries", DHookCallback_UpdateMissionDestroySentries_Pre, DHookCallback_UpdateMissionDestroySentries_Post);
 	CreateDynamicDetour(gamedata, "CTFGameRules::IsQuickBuildTime", DHookCallback_IsQuickBuildTime_Pre, DHookCallback_IsQuickBuildTime_Post);
 	CreateDynamicDetour(gamedata, "CTFGameRules::GameModeUsesUpgrades", _, DHookCallback_GameModeUsesUpgrades_Post);
 	CreateDynamicDetour(gamedata, "CTFGameRules::CanPlayerUseRespec", DHookCallback_CanPlayerUseRespec_Pre, DHookCallback_CanPlayerUseRespec_Post);
@@ -46,6 +47,8 @@ void DHooks_Initialize(GameData gamedata)
 	CreateDynamicDetour(gamedata, "CBaseObject::FindSnapToBuildPos", DHookCallback_FindSnapToBuildPos_Pre, DHookCallback_FindSnapToBuildPos_Post);
 	CreateDynamicDetour(gamedata, "CBaseObject::ShouldQuickBuild", DHookCallback_ShouldQuickBuild_Pre, DHookCallback_ShouldQuickBuild_Post);
 	CreateDynamicDetour(gamedata, "CObjectSapper::ApplyRoboSapperEffects", DHookCallback_ApplyRoboSapperEffects_Pre, DHookCallback_ApplyRoboSapperEffects_Post);
+	CreateDynamicDetour(gamedata, "CSpawnLocation::FindSpawnLocation", _, DHookCallback_FindSpawnLocation_Post);
+	//CreateDynamicDetour(gamedata, "CSpawnLocation::DoTeleporterOverride", _, DHookCallback_DoTeleporterOverride_Post);
 	
 	g_DHookMyTouch = CreateDynamicHook(gamedata, "CCurrencyPack::MyTouch");
 	g_DHookComeToRest = CreateDynamicHook(gamedata, "CCurrencyPack::ComeToRest");
@@ -133,7 +136,7 @@ public MRESReturn DHookCallback_ApplyUpgradeToItem_Post()
 public MRESReturn DHookCallback_PopulationManagerUpdate_Pre()
 {
 	//Prevents the populator from messing with the GC and allocating bots
-	return MRES_Supercede;
+	//return MRES_Supercede;
 }
 
 public MRESReturn DHookCallback_PopulationManagerResetMap_Pre()
@@ -169,6 +172,19 @@ public MRESReturn DHookCallback_RemovePlayerAndItemUpgradesFromHistory_Pre(int p
 public MRESReturn DHookCallback_RemovePlayerAndItemUpgradesFromHistory_Post(int populator)
 {
 	ResetMannVsMachineMode();
+}
+
+public MRESReturn DHookCallback_UpdateMissionDestroySentries_Pre()
+{
+	//SetMannVsMachineMode(true);
+	
+	
+}
+
+public MRESReturn DHookCallback_UpdateMissionDestroySentries_Post()
+{
+	//ResetMannVsMachineMode();
+	
 }
 
 public MRESReturn DHookCallback_IsQuickBuildTime_Pre()
@@ -434,6 +450,19 @@ public MRESReturn DHookCallback_ApplyRoboSapperEffects_Post(int sapper, DHookRet
 	int target = params.Get(1);
 	
 	MvMPlayer(target).ResetIsMiniBoss();
+}
+
+public MRESReturn DHookCallback_FindSpawnLocation_Post(DHookReturn ret, DHookParam params)
+{
+	
+	//TODO: This will CRASH if m_teamSpawnVector has now-deleted spawn points in it
+	//Find a way to make it
+	return MRES_Ignored;
+}
+
+public MRESReturn DHookCallback_DoTeleporterOverride_Post(DHookReturn ret, DHookParam params)
+{
+	PrintToChatAll("DoTeleporterOverride");
 }
 
 public MRESReturn DHookCallback_MyTouch_Pre(int currencypack, DHookReturn ret, DHookParam params)
